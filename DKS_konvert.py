@@ -41,24 +41,25 @@ elif endepunkt_nr == 4:
 
 # Henting av data fra DKS på JSON-format
 respons = requests.get(endepunkt[endepunkt_nr], params=parameter).json()
+pp.pprint(len(respons))  
 data = []
-while len(respons) > 0:
-    for e in respons:
+
+try:
+    while len(respons) > 0:
         data.append(e)    
     parameter['page'] += 1
     respons = requests.get(endepunkt[endepunkt_nr], params=parameter).json()
     print("Henter data fra side: ", parameter['page'])
-
-# pp.pprint(data) # Skriver ut testdata
+except:
+    print("Ferdig med henting av data")
+    pass
 
 # Konverterer og skriver data til CSV-fil
 data_file = open('DKS_datafil.csv', 'w', encoding="utf-8", newline='')
-
 csv_writer = csv.writer(data_file)
 
 # Teller for å holde styr på headers i CSV-fila
 count = 0
-
 for row in data:
 	# Skriver overskriftene
 	if count == 0:
@@ -68,5 +69,4 @@ for row in data:
     # Skriver data linje for linje
 	csv_writer.writerow(row.values())
 data_file.close()
-
 print("Ferdig!")

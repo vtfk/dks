@@ -61,7 +61,7 @@ endepunkt = "https://portal.denkulturelleskolesekken.no/public/productions"
 # Parameter som sendes med til API'et
 parameter = {
     "page": 1,
-    "pageSize": 50
+    "pageSize": 1
 }
 
 # Henting av data fra DKS på Objekt-format
@@ -75,7 +75,12 @@ while len(respons) > 0:
     for e in respons:
         temp_store.append(e)    
     parameter['page'] += 1
-    respons = requests.get(endepunkt, params=parameter).json()
+    try:
+        respons = requests.get(endepunkt, params=parameter).json()
+    except:
+        print("Noe gikk galt på side: ", parameter['page'])
+        print(requests.get(endepunkt, params=parameter))
+        pass
     print("Henter data fra side: ", parameter['page'])
 
 for e in temp_store:
